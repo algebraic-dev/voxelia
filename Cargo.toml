@@ -1,0 +1,7 @@
+[workspace]
+
+members = [
+    "crates/voxelia-renderer"
+]
+
+resolver = "1"
