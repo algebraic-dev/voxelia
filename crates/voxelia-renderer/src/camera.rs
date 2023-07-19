@@ -23,7 +23,7 @@ pub struct Camera {
 impl Camera {
     pub fn new(size: winit::dpi::PhysicalSize<u32>) -> Self {
         Self {
-            eye: (0.0, 1.0, 2.0).into(),
+            eye: (3.0, 3.0, 3.0).into(),
             target: (0.0, 0.0, 0.0).into(),
             up: cgmath::Vector3::unit_y(),
             aspect: size.width as f32 / size.height as f32,

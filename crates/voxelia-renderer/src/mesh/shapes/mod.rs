@@ -1,1 +1,1 @@
-pub mod pentagon;
+pub mod cube;

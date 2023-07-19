@@ -1,13 +1,12 @@
-use wgpu::RenderPipeline;
 use winit::window::Window;
 
 use crate::{
     camera::Camera,
-    mesh::{self, shapes::pentagon::Pentagon, *},
+    mesh::{self, shapes::cube::Cube, *},
     pass_data::Globals,
     pipeline,
     renderer::Renderer,
-    texture::{self, Texture},
+    texture::Texture,
 };
 
 pub struct State {
@@ -16,6 +15,7 @@ pub struct State {
     pub global: Globals,
     pub texture: Texture,
     pub pentagon: mesh::Mesh,
+    pub start: std::time::Instant,
 }
 
 impl State {
@@ -36,8 +36,9 @@ impl State {
         Self {
             camera: Camera::new(renderer.size),
             global,
-            pentagon: Pentagon.to_mesh(&renderer.device),
+            pentagon: Cube.to_mesh(&renderer.device),
             texture,
+            start: std::time::Instant::now(),
             renderer,
         }
     }
@@ -48,13 +49,18 @@ impl State {
 
     pub fn resize(&mut self, size: winit::dpi::PhysicalSize<u32>) {
         self.renderer.resize(size);
+        self.camera.aspect = self.renderer.config.width as f32 / self.renderer.config.height as f32;
     }
 
-    pub fn input(&mut self, event: &winit::event::WindowEvent) -> bool {
+    pub fn input(&mut self, _event: &winit::event::WindowEvent) -> bool {
         false
     }
 
     pub fn update(&mut self) {
+        self.camera.eye.x = self.start.elapsed().as_secs_f32().sin() * 5.0;
+        self.camera.eye.y = self.start.elapsed().as_secs_f32().cos() * 5.0;
+        self.camera.eye.z = self.start.elapsed().as_secs_f32().cos() * 5.0;
+
         self.global.camera.data.update_view_proj(&self.camera);
 
         self.renderer.queue.write_buffer(

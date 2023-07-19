@@ -3,10 +3,7 @@
 use std::fs;
 
 use crate::{
-    mesh::{
-        model::{instances::InstanceRaw, vertex::ModelVertex},
-        vertex::Vertex,
-    },
+    mesh::{model::vertex::ModelVertex, vertex::Vertex},
     pass_data::Globals,
     texture,
 };
@@ -87,7 +84,7 @@ impl Pipeline {
             config,
             layout,
             vertex,
-            &[ModelVertex::desc(), InstanceRaw::desc()],
+            &[ModelVertex::desc()],
             fragment,
         )
     }
