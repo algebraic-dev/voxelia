@@ -79,7 +79,7 @@ impl ToMesh for Cube {
         });
 
         Mesh {
-            name: "Pentagon".to_owned(),
+            name: "Cube".to_owned(),
             vertex_buffer,
             index_buffer,
             num_elements: INDICES.len() as u32,

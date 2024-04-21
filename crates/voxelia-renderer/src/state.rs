@@ -1,7 +1,7 @@
 use winit::window::Window;
 
 use crate::{
-    camera::Camera,
+    camera::{Camera, Projection},
     mesh::{self, shapes::cube::Cube, *},
     pass_data::Globals,
     pipeline,
@@ -11,6 +11,7 @@ use crate::{
 
 pub struct State {
     pub renderer: Renderer,
+    pub projection: Projection,
     pub camera: Camera,
     pub global: Globals,
     pub texture: Texture,
@@ -22,7 +23,7 @@ impl State {
     pub async fn new(window: Window) -> Self {
         let renderer = Renderer::new(window).await;
 
-        let img = include_bytes!("img.png");
+        let img = include_bytes!("textures/img.png");
         let texture = Texture::from_bytes(&renderer.device, &renderer.queue, img, "ata").unwrap();
 
         let mut global = Globals::new(&renderer.device, &texture);
@@ -34,7 +35,8 @@ impl State {
         ));
 
         Self {
-            camera: Camera::new(renderer.size),
+            projection: Projection::new(renderer.size),
+            camera: Camera::new((-10.0, 0.0, 0.0), cgmath::Deg(0.0), cgmath::Deg(0.0)),
             global,
             pentagon: Cube.to_mesh(&renderer.device),
             texture,
@@ -49,7 +51,8 @@ impl State {
 
     pub fn resize(&mut self, size: winit::dpi::PhysicalSize<u32>) {
         self.renderer.resize(size);
-        self.camera.aspect = self.renderer.config.width as f32 / self.renderer.config.height as f32;
+        self.projection.aspect =
+            self.renderer.config.width as f32 / self.renderer.config.height as f32;
     }
 
     pub fn input(&mut self, _event: &winit::event::WindowEvent) -> bool {
@@ -57,11 +60,10 @@ impl State {
     }
 
     pub fn update(&mut self) {
-        self.camera.eye.x = self.start.elapsed().as_secs_f32().sin() * 5.0;
-        self.camera.eye.y = self.start.elapsed().as_secs_f32().cos() * 5.0;
-        self.camera.eye.z = self.start.elapsed().as_secs_f32().cos() * 5.0;
-
-        self.global.camera.data.update_view_proj(&self.camera);
+        self.global
+            .camera
+            .data
+            .update_view_proj(&self.camera, &self.projection);
 
         self.renderer.queue.write_buffer(
             &self.global.camera.buffer,

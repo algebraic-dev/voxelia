@@ -35,7 +35,7 @@ impl Renderer {
         // A context for all the wgpu objects. It's used to create an [Adapter] and a [Surface]
         // And does not need to be keep alive.
         let instance = wgpu::Instance::new(wgpu::InstanceDescriptor {
-            backends: wgpu::Backends::GL,
+            backends: wgpu::Backends::PRIMARY,
             dx12_shader_compiler: Default::default(),
         });
 

@@ -30,11 +30,11 @@ impl Renderable for Mesh {
         render_pass.set_pipeline(&global.pipelines[0].pipeline);
 
         render_pass.set_vertex_buffer(0, self.vertex_buffer.slice(..));
-        render_pass.set_index_buffer(self.index_buffer.slice(..), wgpu::IndexFormat::Uint16); // 1.
+        render_pass.set_index_buffer(self.index_buffer.slice(..), wgpu::IndexFormat::Uint16);
 
         render_pass.set_bind_group(0, &global.texture.group, &[]);
         render_pass.set_bind_group(1, &global.camera.group, &[]);
 
-        render_pass.draw_indexed(0..self.num_elements, 0, 0..1); // 2.
+        render_pass.draw_indexed(0..self.num_elements, 0, 0..1);
     }
 }
