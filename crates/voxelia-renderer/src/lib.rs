@@ -1,14 +1,6 @@
-pub fn add(left: usize, right: usize) -> usize {
-    left + right
-}
+//! Definition of primitives for rendering the `engine` crate using `wgpu`.
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+pub mod window;
 
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
-}
+// Re-exports
+pub use window::{Window, PhysicalSize, WindowEvents};
