@@ -1,5 +1,5 @@
 [package]
-name = "voxelia-renderer"
+name = "voxelia-client"
 version = "0.1.0"
 edition = "2021"
 

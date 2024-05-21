@@ -1,6 +1,6 @@
 [workspace]
 
-members = [
+members = [ "crates/renderer-client", "crates/voxelia-client", "crates/voxelia-engine",
     "crates/voxelia-renderer"
 ]
 
