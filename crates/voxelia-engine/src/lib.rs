@@ -9,6 +9,12 @@ pub struct Engine<'a, 'b> {
     pub dispatcher: specs::Dispatcher<'a, 'b>,
 }
 
+impl<'a, 'b> Engine<'a, 'b> {
+    pub fn run(&mut self) {
+        self.dispatcher.dispatch(&self.world)
+    }
+}
+
 /// The [World] is a builder for both a specs::World and a specs::Dispatcher
 pub struct WorldBuilder<'a, 'b> {
     dispatcher: specs::DispatcherBuilder<'a, 'b>,
@@ -51,18 +57,18 @@ impl<'a, 'b> WorldBuilder<'a, 'b> {
 /// A plugin adds information to the ECS of the engine in order to add new systems and new things
 /// to the game logic.
 pub trait Plugin {
-    fn setup(&self, world: &mut WorldBuilder);
+    fn setup(self, world: &mut WorldBuilder);
 }
 
 /// Creates a new Engine based on plugins
 pub struct Builder<'a, 'b> {
-    world_builder: WorldBuilder<'a, 'b>
+    world_builder: WorldBuilder<'a, 'b>,
 }
 
 impl<'a, 'b> Builder<'a, 'b> {
     pub fn new() -> Self {
         Builder {
-            world_builder: WorldBuilder::new()
+            world_builder: WorldBuilder::new(),
         }
     }
 
@@ -74,9 +80,10 @@ impl<'a, 'b> Builder<'a, 'b> {
 
     /// Creates a new engine using a bunch of plugins.
     pub fn build(self) -> Engine<'a, 'b> {
-        Engine {
-            world: self.world_builder.world,
-            dispatcher: self.world_builder.dispatcher.build(),
-        }
+        let mut world = self.world_builder.world;
+        let mut dispatcher = self.world_builder.dispatcher.build();
+        dispatcher.setup(&mut world);
+
+        Engine { world, dispatcher }
     }
 }

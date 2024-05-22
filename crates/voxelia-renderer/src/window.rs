@@ -2,13 +2,14 @@
 
 use winit::{
     dpi::Pixel,
-    event::{DeviceEvent, ElementState, Event, KeyboardInput, VirtualKeyCode, WindowEvent},
+    event::{DeviceEvent, ElementState, Event, KeyboardInput, WindowEvent},
     event_loop::{ControlFlow, EventLoop},
     window,
 };
 
 // Public re-exports
 pub use winit::dpi::PhysicalSize;
+pub use winit::event::VirtualKeyCode;
 
 /// Instance of a window of a game with an event loop that will get all window events and push it
 /// into somewhere else.

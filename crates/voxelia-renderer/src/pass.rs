@@ -7,10 +7,10 @@ pub mod phong;
 /// Shared behaviour of being something that is able to render thigns to the screen
 pub trait Pass {
     fn draw(
-        &mut self,
+        &self,
         renderer: &Renderer,
         materials: &[Material],
-        meshes: &[Mesh],
+        meshes: &[&Mesh],
         globals: &Globals
     ) -> Result<(), wgpu::SurfaceError>;
 }

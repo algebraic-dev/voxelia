@@ -9,6 +9,21 @@ pub struct ModelVertex {
     pub tex_coords: [f32; 2],
 }
 
+pub type ModelIndex = u16;
+
+impl ModelVertex {
+    pub fn add(&self, position: [f32; 3]) -> ModelVertex {
+        ModelVertex {
+            position: [
+                self.position[0] + position[0],
+                self.position[1] + position[1],
+                self.position[2] + position[2],
+            ],
+            tex_coords: self.tex_coords.clone(),
+        }
+    }
+}
+
 impl ModelVertex {
     pub const DESC: [wgpu::VertexAttribute; 2] = wgpu::vertex_attr_array![
         0 => Float32x3,

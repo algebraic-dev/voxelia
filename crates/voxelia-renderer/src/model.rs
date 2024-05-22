@@ -2,9 +2,12 @@
 //! every [Model].
 
 pub mod cube;
+pub mod chunk;
 
-use crate::{instance::ModelInstance, renderer::Renderer, texture, vertex::ModelVertex};
+use crate::{instance::ModelInstance, renderer::Renderer, texture, vertex::{ModelIndex, ModelVertex}};
 use wgpu::util::DeviceExt;
+
+pub struct MaterialId(pub u32);
 
 /// Defines a [Texture] with a BindGroup
 pub struct Material {
@@ -52,7 +55,7 @@ pub struct Mesh {
     pub instance_buffer: wgpu::Buffer,
     pub num_indices: u32,
     pub num_instances: u32,
-    pub material_id: usize,
+    pub material_id: MaterialId,
 }
 
 impl Mesh {
@@ -60,9 +63,9 @@ impl Mesh {
         renderer: &Renderer,
         label: String,
         vertices: &[ModelVertex],
-        indices: &[u16],
+        indices: &[ModelIndex],
         instances: &[ModelInstance],
-        material_id: usize,
+        material_id: MaterialId,
     ) -> Mesh {
         let vertex_buffer = renderer
             .device

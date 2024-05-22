@@ -10,6 +10,7 @@ edition = "2021"
 voxelia-renderer = { path = "../voxelia-renderer" }
 voxelia-engine = { path = "../voxelia-engine" }
 
+cgmath = "0.18.0"
 specs = { version = "0.20.0", features = ["specs-derive"] }
 env_logger = "0.10.0"
 

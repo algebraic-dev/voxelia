@@ -67,10 +67,10 @@ impl PhongPass {
 
 impl Pass for PhongPass {
     fn draw(
-        &mut self,
+        &self,
         renderer: &Renderer,
         materials: &[Material],
-        meshes: &[Mesh],
+        meshes: &[&Mesh],
         globals: &Globals,
     ) -> Result<(), wgpu::SurfaceError> {
         // Gives a surface to create a new frame of.
@@ -117,7 +117,7 @@ impl Pass for PhongPass {
             render_pass.set_pipeline(&self.render_pipeline.pipeline);
 
             for mesh in meshes {
-                let material = &materials[mesh.material_id as usize];
+                let material = &materials[mesh.material_id.0 as usize];
 
                 render_pass.set_vertex_buffer(0, mesh.vertex_buffer.slice(..));
 
