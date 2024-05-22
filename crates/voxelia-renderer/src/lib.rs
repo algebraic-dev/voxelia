@@ -9,6 +9,8 @@ pub mod camera;
 pub mod vertex;
 pub mod instance;
 pub mod model;
+pub mod uniform;
+pub mod globals;
 
 // Re-exports
 pub use window::{Window, PhysicalSize, WindowEvents};

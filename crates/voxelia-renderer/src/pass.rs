@@ -1,6 +1,6 @@
 //! This module defines a [Pass] that is a trait to render something with a [RenderPipeline].
 
-use crate::{model::{Material, Mesh}, renderer::Renderer};
+use crate::{globals::Globals, model::{Material, Mesh}, renderer::Renderer};
 
 pub mod phong;
 
@@ -11,5 +11,6 @@ pub trait Pass {
         renderer: &Renderer,
         materials: &[Material],
         meshes: &[Mesh],
+        globals: &Globals
     ) -> Result<(), wgpu::SurfaceError>;
 }

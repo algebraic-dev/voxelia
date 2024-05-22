@@ -1,6 +1,8 @@
 //! Defines what some things are like [Mesh] and [Material] that are extremely important for rendering
 //! every [Model].
 
+pub mod cube;
+
 use crate::{instance::ModelInstance, renderer::Renderer, texture, vertex::ModelVertex};
 use wgpu::util::DeviceExt;
 

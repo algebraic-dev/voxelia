@@ -4,6 +4,7 @@ use std::fs;
 
 use crate::texture;
 
+/// A wrapper struct for `wgpu::RenderPipeline` that encapsulates a rendering pipeline.
 pub struct Pipeline {
     pub pipeline: wgpu::RenderPipeline,
 }

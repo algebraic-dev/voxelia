@@ -1,6 +1,9 @@
 //! 3D Camera for rendering.
 
 use cgmath::InnerSpace;
+use wgpu::BindGroupLayout;
+
+use crate::renderer::Renderer;
 
 /// Matrix to convert OpenGL coordinates into WGPU coordinates.
 #[rustfmt::skip]
@@ -81,6 +84,22 @@ pub struct CameraUniform {
 impl CameraUniform {
     pub fn update_view_proj(&mut self, camera: &Camera, proj: &Projection) {
         self.view_proj = (proj.build_view_projection_matrix() * camera.calc_matrix()).into();
+    }
+
+    pub fn layout(renderer: &Renderer) -> BindGroupLayout {
+        renderer.device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
+            entries: &[wgpu::BindGroupLayoutEntry {
+                binding: 0,
+                visibility: wgpu::ShaderStages::VERTEX,
+                ty: wgpu::BindingType::Buffer {
+                    ty: wgpu::BufferBindingType::Uniform,
+                    has_dynamic_offset: false,
+                    min_binding_size: None,
+                },
+                count: None,
+            }],
+            label: Some("Camera bind group layout"),
+        })
     }
 }
 

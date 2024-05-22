@@ -3,7 +3,13 @@
 use wgpu::{BindGroupLayout, IndexFormat};
 
 use crate::{
-    instance::InstanceRaw, model::{Material, Mesh}, pipeline, renderer::Renderer, texture, vertex::ModelVertex
+    globals::Globals,
+    instance::InstanceRaw,
+    model::{Material, Mesh},
+    pipeline,
+    renderer::Renderer,
+    texture,
+    vertex::ModelVertex,
 };
 
 use super::Pass;
@@ -16,7 +22,7 @@ pub struct PhongPass {
 }
 
 impl PhongPass {
-    pub fn new(renderer: &Renderer) -> Self {
+    pub fn new(renderer: &Renderer, globals: &Globals) -> Self {
         let device = &renderer.device;
         let config = &renderer.config;
 
@@ -26,7 +32,7 @@ impl PhongPass {
 
         let layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
             label: Some("Render Pipeline Layout"),
-            bind_group_layouts: &[&texture_bind_group_layout],
+            bind_group_layouts: &[&texture_bind_group_layout, &globals.camera.layout],
             push_constant_ranges: &[],
         });
 
@@ -65,6 +71,7 @@ impl Pass for PhongPass {
         renderer: &Renderer,
         materials: &[Material],
         meshes: &[Mesh],
+        globals: &Globals,
     ) -> Result<(), wgpu::SurfaceError> {
         // Gives a surface to create a new frame of.
         let output = renderer.surface.get_current_texture()?;
@@ -113,11 +120,13 @@ impl Pass for PhongPass {
                 let material = &materials[mesh.material_id as usize];
 
                 render_pass.set_vertex_buffer(0, mesh.vertex_buffer.slice(..));
+
                 render_pass.set_bind_group(0, &material.bind_group, &[]);
-                
+                render_pass.set_bind_group(1, &globals.camera.group, &[]);
+
                 render_pass.set_vertex_buffer(1, mesh.instance_buffer.slice(..));
                 render_pass.set_index_buffer(mesh.index_buffer.slice(..), IndexFormat::Uint16);
-                
+
                 render_pass.draw_indexed(0..mesh.num_indices, 0, 0..mesh.num_instances);
             }
         }
