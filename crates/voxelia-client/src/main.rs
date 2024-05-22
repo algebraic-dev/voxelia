@@ -1,8 +1,8 @@
 use specs::{Builder, WorldExt};
-use voxelia_client::chunk::{Chunk, Created};
 use voxelia_client::graphics::Graphics;
 use voxelia_client::RendererPlugin;
 
+use voxelia_engine::{chunk::Chunk, events::Created, VoxeliaPlugin};
 use voxelia_renderer::{PhysicalSize, Window, WindowEvents};
 
 #[tokio::main]
@@ -13,6 +13,7 @@ async fn main() {
     let info = Graphics::new(&window).await;
 
     let mut engine = voxelia_engine::Builder::new()
+        .with(VoxeliaPlugin)
         .with(RendererPlugin { info })
         .build();
 

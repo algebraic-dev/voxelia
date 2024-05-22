@@ -16,7 +16,7 @@ pub struct Graphics {
 
 impl Graphics {
     pub async fn new(window: &Window) -> Graphics {
-        let renderer = Renderer::new(&window).await;
+        let renderer = Renderer::new(window).await;
         let globals = Globals::new(&renderer);
         let phong = PhongPass::new(&renderer, &globals);
 
@@ -25,7 +25,7 @@ impl Graphics {
 
         let projection = Projection::new(renderer.size);
         let camera = Camera::new(
-            (20.0, 20.0 as f32, 25.0 as f32),
+            (20.0, 20.0, 25.0),
             cgmath::Deg(-90.0 - 30.0),
             cgmath::Deg(-30.0),
         );

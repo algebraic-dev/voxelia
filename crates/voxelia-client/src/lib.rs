@@ -1,18 +1,19 @@
-use chunk::{Chunk, ChunkRenderSystem, ChunkRenderer, Created};
+use chunk::ChunkRenderSystem;
 use graphics::Graphics;
-use specs::{System, WriteExpect, WriteStorage};
+use mesh::DynamicMesh;
+use specs::{System, WriteExpect, WriteStorage, Join};
 use voxelia_engine::Plugin;
 use voxelia_renderer::pass::Pass;
-use specs::Join;
 
 pub mod graphics;
 pub mod chunk;
+pub mod mesh;
 
 /// Renders all the meshes.
 pub struct RendererSystem;
 
 impl<'a> System<'a> for RendererSystem {
-    type SystemData = (WriteExpect<'a, Graphics>, WriteStorage<'a, ChunkRenderer>);
+    type SystemData = (WriteExpect<'a, Graphics>, WriteStorage<'a, DynamicMesh>);
 
     fn run(&mut self, (info, renders): Self::SystemData) {
         let meshes = renders.join().map(|x| &x.data).collect::<Vec<_>>();
@@ -28,9 +29,7 @@ pub struct RendererPlugin {
 
 impl Plugin for RendererPlugin {
     fn setup(self, world: &mut voxelia_engine::WorldBuilder) {
-        world.with_component::<Chunk>();
-        world.with_component::<Created>();
-        world.with_component::<ChunkRenderer>();
+        world.with_component::<DynamicMesh>();
 
         world.with_resource(self.info);
         world.with_system(ChunkRenderSystem, "chunk render system", &[]);
