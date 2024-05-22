@@ -1,16 +1,14 @@
 //! The [PhongPass] is a struct that represents the phong pass of to render objects.
 
-use wgpu::BindGroupLayout;
+use wgpu::{BindGroupLayout, IndexFormat};
 
 use crate::{
-    pipeline,
-    renderer::{self, Renderer},
-    texture,
+    instance::InstanceRaw, model::{Material, Mesh}, pipeline, renderer::Renderer, texture, vertex::ModelVertex
 };
 
 use super::Pass;
 
-/// The greatest Pass
+/// The primary pass for rendering the entire thing.
 pub struct PhongPass {
     pub depth_texture: texture::Texture,
     pub render_pipeline: pipeline::Pipeline,
@@ -28,15 +26,21 @@ impl PhongPass {
 
         let layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
             label: Some("Render Pipeline Layout"),
-            bind_group_layouts: &[],
+            bind_group_layouts: &[&texture_bind_group_layout],
             push_constant_ranges: &[],
         });
 
         let vertex = pipeline::include_shader!(device, "../shaders/shader.wgsl");
         let fragment = pipeline::include_shader!(device, "../shaders/shader.wgsl");
 
-        let render_pipeline =
-            pipeline::Pipeline::new(&device, &config, layout, vertex, &[], fragment);
+        let render_pipeline = pipeline::Pipeline::new(
+            &device,
+            &config,
+            layout,
+            vertex,
+            &[ModelVertex::desc(), InstanceRaw::desc()],
+            fragment,
+        );
 
         Self {
             depth_texture,
@@ -45,6 +49,7 @@ impl PhongPass {
         }
     }
 
+    /// Resizes the depth buffer of the [Phase]
     pub fn resize(&mut self, renderer: &Renderer) {
         self.depth_texture = texture::Texture::create_depth_texture(
             &renderer.device,
@@ -55,7 +60,12 @@ impl PhongPass {
 }
 
 impl Pass for PhongPass {
-    fn draw(&mut self, renderer: &Renderer) -> Result<(), wgpu::SurfaceError> {
+    fn draw(
+        &mut self,
+        renderer: &Renderer,
+        materials: &[Material],
+        meshes: &[Mesh],
+    ) -> Result<(), wgpu::SurfaceError> {
         // Gives a surface to create a new frame of.
         let output = renderer.surface.get_current_texture()?;
 
@@ -98,7 +108,18 @@ impl Pass for PhongPass {
             });
 
             render_pass.set_pipeline(&self.render_pipeline.pipeline);
-            render_pass.draw(0..3, 0..1)
+
+            for mesh in meshes {
+                let material = &materials[mesh.material_id as usize];
+
+                render_pass.set_vertex_buffer(0, mesh.vertex_buffer.slice(..));
+                render_pass.set_bind_group(0, &material.bind_group, &[]);
+                
+                render_pass.set_vertex_buffer(1, mesh.instance_buffer.slice(..));
+                render_pass.set_index_buffer(mesh.index_buffer.slice(..), IndexFormat::Uint16);
+                
+                render_pass.draw_indexed(0..mesh.num_indices, 0, 0..mesh.num_instances);
+            }
         }
 
         // Submits the commands to the GPU.

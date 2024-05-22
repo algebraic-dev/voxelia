@@ -2,8 +2,11 @@
 
 use image::GenericImageView;
 
+use crate::renderer::Renderer;
+
 /// A WGPU Texture that contains a sampler too and a view.
 pub struct Texture {
+    pub name: String,
     pub texture: wgpu::Texture,
     pub view: wgpu::TextureView,
     pub sampler: wgpu::Sampler,
@@ -52,6 +55,7 @@ impl Texture {
         });
 
         Self {
+            name: label.to_string(),
             texture,
             view,
             sampler,
@@ -60,13 +64,12 @@ impl Texture {
 
     /// Creates a new [Texture] out of a byte array.
     pub fn from_bytes(
-        device: &wgpu::Device,
-        queue: &wgpu::Queue,
+        renderer: &Renderer,
         bytes: &[u8],
         label: &str,
     ) -> Result<Self, image::ImageError> {
         let img = image::load_from_memory(bytes)?;
-        Self::from_image(device, queue, &img, label)
+        Self::from_image(&renderer.device, &renderer.queue, &img, label)
     }
 
     /// Creates a new [Texture] out of an image.
@@ -108,6 +111,7 @@ impl Texture {
         let sampler = device.create_sampler(&default_sampler());
 
         Ok(Self {
+            name: label.to_string(),
             texture,
             view,
             sampler,
