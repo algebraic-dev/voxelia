@@ -11,15 +11,15 @@ pub struct Globals {
 
 impl Globals {
     pub fn new(renderer: &Renderer) -> Globals {
-        let layout = CameraUniform::layout(&renderer);
+        let layout = CameraUniform::layout(renderer);
 
         Globals {
-            camera: Uniform::new(&renderer, layout, Default::default(), "camera"),
+            camera: Uniform::new(renderer, layout, Default::default(), "camera"),
         }
     }
 
     pub fn update_camera(&mut self, renderer: &Renderer, camera: &Camera, projection: &Projection) {
-        self.camera.data.update_view_proj(&camera, &projection);
+        self.camera.data.update_view_proj(camera, projection);
 
         renderer.queue.write_buffer(
             &self.camera.buffer,

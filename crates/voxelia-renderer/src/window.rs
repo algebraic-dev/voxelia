@@ -44,7 +44,7 @@ impl Window {
     }
 
     /// Runs the window event loop.
-    pub fn run(self, mut func: impl 'static + FnMut(&window::Window, WindowEvents) -> ()) -> ! {
+    pub fn run(self, mut func: impl 'static + FnMut(&window::Window, WindowEvents)) -> ! {
         let id = self.window.id();
 
         self.event_loop

@@ -81,7 +81,7 @@ impl Cube {
         Mesh::from_vertex(
             renderer,
             "Cube".to_owned(),
-            &VERTICES,
+            VERTICES,
             INDICES,
             &[
                 ModelInstance {

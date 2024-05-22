@@ -19,6 +19,12 @@ pub struct WorldBuilder<'a, 'b> {
     world: specs::World,
 }
 
+impl<'a, 'b> Default for WorldBuilder<'a, 'b> {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl<'a, 'b> WorldBuilder<'a, 'b> {
     pub fn new() -> Self {
         WorldBuilder {
@@ -32,7 +38,7 @@ impl<'a, 'b> WorldBuilder<'a, 'b> {
     where
         T: for<'c> specs::System<'c> + Send + 'a,
     {
-        self.dispatcher.add(system, name, &deps);
+        self.dispatcher.add(system, name, deps);
     }
 
     /// Registers a new type of component into the world.
@@ -61,6 +67,12 @@ pub trait Plugin {
 /// Creates a new Engine based on plugins
 pub struct Builder<'a, 'b> {
     world_builder: WorldBuilder<'a, 'b>,
+}
+
+impl<'a, 'b> Default for Builder<'a, 'b> {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl<'a, 'b> Builder<'a, 'b> {

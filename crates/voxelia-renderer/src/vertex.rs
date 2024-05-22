@@ -19,7 +19,7 @@ impl ModelVertex {
                 self.position[1] + position[1],
                 self.position[2] + position[2],
             ],
-            tex_coords: self.tex_coords.clone(),
+            tex_coords: self.tex_coords,
         }
     }
 }

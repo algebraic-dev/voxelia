@@ -27,7 +27,7 @@ impl PhongPass {
         let config = &renderer.config;
 
         let depth_texture =
-            texture::Texture::create_depth_texture(&device, &config, "Depth Texture");
+            texture::Texture::create_depth_texture(device, config, "Depth Texture");
         let texture_bind_group_layout = texture::default_texture_bind_group_layout(device);
 
         let layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
@@ -40,8 +40,8 @@ impl PhongPass {
         let fragment = pipeline::include_shader!(device, "../shaders/shader.wgsl");
 
         let render_pipeline = pipeline::Pipeline::new(
-            &device,
-            &config,
+            device,
+            config,
             layout,
             vertex,
             &[ModelVertex::desc(), InstanceRaw::desc()],
