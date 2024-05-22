@@ -6,15 +6,3 @@ pub mod chunk;
 pub mod events;
 
 pub use core::*;
-
-use chunk::Chunk;
-use events::Created;
-
-pub struct VoxeliaPlugin;
-
-impl Plugin for VoxeliaPlugin {
-    fn setup(self, world: &mut WorldBuilder) {
-        world.with_component::<Chunk>();
-        world.with_component::<Created>()
-    }
-}

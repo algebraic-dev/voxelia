@@ -2,9 +2,15 @@
 //! game.
 
 use voxelia_renderer::{
-    camera::{Camera, Projection}, globals::Globals, model::Material, pass::phong::PhongPass, renderer::Renderer, texture::Texture, PhysicalSize, Window
+    camera::{Camera, Projection},
+    globals::Globals,
+    model::Material,
+    pass::phong::PhongPass,
+    renderer::Renderer,
+    PhysicalSize, Window,
 };
 
+/// All the things that are needed to render everything in the voxelia-engine crate.
 pub struct Graphics {
     pub renderer: Renderer,
     pub materials: Vec<Material>,
@@ -20,9 +26,6 @@ impl Graphics {
         let globals = Globals::new(&renderer);
         let phong = PhongPass::new(&renderer, &globals);
 
-        let texture = Texture::from_bytes(&renderer, include_bytes!("b.jpeg"), "Bulacha").unwrap();
-        let material = Material::from_texture(&renderer, texture, &phong.texture_bind_group_layout);
-
         let projection = Projection::new(renderer.size);
         let camera = Camera::new(
             (20.0, 20.0, 25.0),
@@ -32,7 +35,7 @@ impl Graphics {
 
         let mut info = Graphics {
             renderer,
-            materials: vec![material],
+            materials: Vec::new(),
             globals,
             pass: phong,
             projection,
@@ -43,6 +46,11 @@ impl Graphics {
 
         info
     }
+
+    pub fn add_material(&mut self, material: Material) {
+        self.materials.push(material)
+    }
+
     pub fn update_camera(&mut self) {
         self.globals
             .update_camera(&self.renderer, &self.camera, &self.projection)

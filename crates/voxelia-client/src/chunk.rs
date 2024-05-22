@@ -29,7 +29,7 @@ impl<'a> System<'a> for ChunkRenderSystem {
 
         for (entity, chunk) in entities_to_remove {
             created.remove(entity);
-            let data = chunk::to_mesh(chunk.data, MaterialId(0), &info.renderer);
+            let data = chunk::to_mesh(chunk.position, chunk.data, MaterialId(0), &info.renderer);
             renders.insert(entity, DynamicMesh { data }).unwrap();
         }
     }

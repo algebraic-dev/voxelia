@@ -24,14 +24,14 @@ impl<'a> System<'a> for RendererSystem {
 }
 
 pub struct RendererPlugin {
-    pub info: Graphics,
+    pub graphics: Graphics,
 }
 
 impl Plugin for RendererPlugin {
     fn setup(self, world: &mut voxelia_engine::WorldBuilder) {
         world.with_component::<DynamicMesh>();
 
-        world.with_resource(self.info);
+        world.with_resource(self.graphics);
         world.with_system(ChunkRenderSystem, "chunk render system", &[]);
         world.with_system(RendererSystem, "renderer system", &[]);
     }
