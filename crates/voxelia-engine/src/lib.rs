@@ -6,3 +6,18 @@ pub mod chunk;
 pub mod events;
 
 pub use core::*;
+
+use specs::{Component, VecStorage};
+
+#[derive(Component)]
+#[storage(VecStorage)]
+pub struct Position(pub [f32;3]);
+
+/// Plugin for rendering and creating chunks.
+pub struct BasicPlugin;
+
+impl Plugin for BasicPlugin {
+    fn setup(self, world: &mut WorldBuilder) {
+        world.with_component::<Position>()
+    }
+}

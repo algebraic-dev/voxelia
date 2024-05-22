@@ -8,7 +8,6 @@ use crate::{Plugin, WorldBuilder};
 #[derive(Component)]
 #[storage(VecStorage)]
 pub struct Chunk {
-    pub position: [f32; 3],
     pub data: [[[u8; 4]; 4]; 4],
 }
 

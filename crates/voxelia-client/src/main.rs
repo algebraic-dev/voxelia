@@ -3,9 +3,7 @@ use voxelia_client::graphics::Graphics;
 use voxelia_client::RendererPlugin;
 
 use voxelia_engine::{
-    chunk::{Chunk, ChunkPlugin},
-    events::{Created, EventsPlugin},
-    Engine,
+    chunk::{Chunk, ChunkPlugin}, events::{Created, EventsPlugin}, BasicPlugin, Engine, Position
 };
 use voxelia_renderer::{model::Material, texture::Texture, PhysicalSize, Window, WindowEvents};
 
@@ -27,8 +25,8 @@ async fn start_engine<'a, 'b>(engine: &mut Engine<'a, 'b>) {
     engine
         .world
         .create_entity()
+        .with(Position([0.0, 0.0, 0.0]))
         .with(Chunk {
-            position: [0.0, 0.0, 0.0],
             data: [
                 [[1, 0, 0, 1], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 1]],
                 [[1, 0, 0, 1], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 1]],
@@ -50,6 +48,7 @@ async fn main() {
     load(&mut graphics).await;
 
     let mut engine = voxelia_engine::Builder::new()
+        .with(BasicPlugin)
         .with(EventsPlugin)
         .with(ChunkPlugin)
         .with(RendererPlugin { graphics })
