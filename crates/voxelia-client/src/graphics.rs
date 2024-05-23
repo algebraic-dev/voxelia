@@ -2,7 +2,7 @@
 //! game.
 
 use voxelia_renderer::{
-    camera::{Camera, Projection},
+    camera::{self, Camera, CameraController, Projection},
     globals::Globals,
     model::Material,
     pass::phong::PhongPass,
@@ -18,6 +18,7 @@ pub struct Graphics {
     pub pass: PhongPass,
     pub projection: Projection,
     pub camera: Camera,
+    pub camera_controller: CameraController,
 }
 
 impl Graphics {
@@ -32,6 +33,7 @@ impl Graphics {
             cgmath::Deg(-90.0 - 30.0),
             cgmath::Deg(-30.0),
         );
+        let camera_controller = camera::CameraController::new(1.0, 0.1);
 
         let mut info = Graphics {
             renderer,
@@ -40,6 +42,7 @@ impl Graphics {
             pass: phong,
             projection,
             camera,
+            camera_controller,
         };
 
         info.update_camera();
@@ -52,8 +55,9 @@ impl Graphics {
     }
 
     pub fn update_camera(&mut self) {
+        self.camera_controller.update_camera(&mut self.camera, 0.05);
         self.globals
-            .update_camera(&self.renderer, &self.camera, &self.projection)
+            .update_camera(&self.renderer, &self.camera, &self.projection);
     }
 
     pub fn resize(&mut self, size: PhysicalSize<u32>) {

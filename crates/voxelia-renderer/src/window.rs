@@ -2,14 +2,14 @@
 
 use winit::{
     dpi::Pixel,
-    event::{DeviceEvent, ElementState, Event, KeyboardInput, WindowEvent},
+    event::{DeviceEvent, Event, KeyboardInput, MouseScrollDelta, WindowEvent},
     event_loop::{ControlFlow, EventLoop},
     window,
 };
 
 // Public re-exports
 pub use winit::dpi::PhysicalSize;
-pub use winit::event::VirtualKeyCode;
+pub use winit::event::{ElementState, MouseButton, VirtualKeyCode};
 
 /// Instance of a window of a game with an event loop that will get all window events and push it
 /// into somewhere else.
@@ -24,6 +24,16 @@ pub enum WindowEvents {
     Keyboard {
         state: ElementState,
         virtual_keycode: Option<VirtualKeyCode>,
+    },
+    MouseWheel {
+        delta: MouseScrollDelta,
+    },
+    MouseInput {
+        button: MouseButton,
+        state: ElementState,
+    },
+    MouseMotion {
+        delta: (f64, f64),
     },
     Draw,
 }
@@ -50,8 +60,12 @@ impl Window {
         self.event_loop
             .run(move |event, _, control_flow| match event {
                 Event::DeviceEvent { event, .. } => match event {
-                    DeviceEvent::MouseMotion { .. } => {}
-                    DeviceEvent::MouseWheel { .. } => {}
+                    DeviceEvent::MouseMotion { delta } => {
+                        func(&self.window, WindowEvents::MouseMotion { delta })
+                    }
+                    DeviceEvent::MouseWheel { delta } => {
+                        func(&self.window, WindowEvents::MouseWheel { delta })
+                    }
                     _ => (),
                 },
                 Event::WindowEvent {
