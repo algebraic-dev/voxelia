@@ -131,6 +131,7 @@ pub struct CameraController {
     scroll: f32,
     speed: f32,
     sensitivity: f32,
+    pub mouse_pressed: bool,
 }
 
 impl CameraController {
@@ -147,6 +148,7 @@ impl CameraController {
             scroll: 0.0,
             speed,
             sensitivity,
+            mouse_pressed: false,
         }
     }
 
@@ -221,9 +223,6 @@ impl CameraController {
         camera.yaw += Rad(self.rotate_horizontal) * self.sensitivity * dt;
         camera.pitch += Rad(-self.rotate_vertical) * self.sensitivity * dt;
 
-        // if process_mouse isn't called every frame, these values
-        // will not get set to zero, and the camera will rotate
-        // when moving in a non-cardinal direction.
         self.rotate_horizontal = 0.0;
         self.rotate_vertical = 0.0;
 

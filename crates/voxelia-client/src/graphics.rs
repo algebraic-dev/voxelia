@@ -19,7 +19,6 @@ pub struct Graphics {
     pub projection: Projection,
     pub camera: Camera,
     pub camera_controller: CameraController,
-    pub mouse_pressed: bool,
 }
 
 impl Graphics {
@@ -44,7 +43,6 @@ impl Graphics {
             projection,
             camera,
             camera_controller,
-            mouse_pressed: false,
         };
 
         info.update_camera();

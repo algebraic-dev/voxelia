@@ -80,7 +80,7 @@ async fn main() {
             ..
         } => {
             let mut graphics = engine.world.write_resource::<Graphics>();
-            graphics.mouse_pressed = state == ElementState::Pressed;
+            graphics.camera_controller.mouse_pressed = state == ElementState::Pressed;
         }
         WindowEvents::MouseMotion { delta } => {
             let mut graphics = engine.world.write_resource::<Graphics>();
