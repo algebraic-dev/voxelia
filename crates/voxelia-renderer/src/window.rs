@@ -1,7 +1,7 @@
 //! Definition of a [Window] and an abstraction over the winit event loop with events.
 
 use winit::{
-    dpi::Pixel,
+    dpi::{PhysicalPosition, Pixel},
     event::{DeviceEvent, Event, KeyboardInput, MouseScrollDelta, WindowEvent},
     event_loop::{ControlFlow, EventLoop},
     window,
@@ -53,6 +53,31 @@ impl Window {
         Self { event_loop, window }
     }
 
+    pub fn center_window(&self) {
+        if let Some(monitor) = self.window.current_monitor() {
+            let screen_size = monitor.size();
+            let window_size = self.window.outer_size();
+
+            self.window.set_outer_position(PhysicalPosition {
+                x: screen_size.width.saturating_sub(window_size.width) as f64 / 2.
+                    + monitor.position().x as f64,
+                y: screen_size.height.saturating_sub(window_size.height) as f64 / 2.
+                    + monitor.position().y as f64,
+            });
+
+            self.window.set_inner_size(PhysicalSize::new(screen_size.width/2, screen_size.height/2));
+        }
+    }
+
+    pub fn size(&self) -> PhysicalSize<u32> {
+        self.window.inner_size()
+    }
+
+    pub fn focus_cursor(&self) {
+        self.window.set_cursor_grab(window::CursorGrabMode::Locked).unwrap();
+        self.window.set_cursor_visible(false);
+    }
+    
     /// Runs the window event loop.
     pub fn run(self, mut func: impl 'static + FnMut(&window::Window, WindowEvents)) -> ! {
         let id = self.window.id();

@@ -5,10 +5,11 @@ use specs::{Entities, ReadStorage, System, WriteExpect, WriteStorage};
 use voxelia_engine::chunk::Chunk;
 use voxelia_engine::events::Created;
 use voxelia_engine::Position;
-use voxelia_renderer::model::{chunk, MaterialId};
+use voxelia_renderer::model::MaterialId;
 
-use crate::graphics::Graphics;
-use crate::mesh::DynamicMesh;
+use crate::structures::graphics::Graphics;
+use crate::structures::mesh::DynamicMesh;
+use crate::model::chunk;
 
 /// Receives a ChunkCreated event and then creates a rendered thing for it.
 pub struct ChunkRenderSystem;
@@ -31,8 +32,8 @@ impl<'a> System<'a> for ChunkRenderSystem {
 
         for (entity, pos, chunk) in entities_to_remove {
             created.remove(entity);
-            let data = chunk::to_mesh(pos.0, chunk.data, MaterialId(0), &info.renderer);
-            renders.insert(entity, DynamicMesh { data }).unwrap();
+            let (model, data) = chunk::ChunkModel::from_data(pos, chunk, MaterialId(0), &info.renderer);
+            renders.insert(entity, DynamicMesh { data, model }).unwrap();
         }
     }
 }

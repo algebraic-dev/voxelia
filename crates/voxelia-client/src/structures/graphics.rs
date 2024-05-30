@@ -28,11 +28,13 @@ impl Graphics {
         let phong = PhongPass::new(&renderer, &globals);
 
         let projection = Projection::new(renderer.size);
+        
         let camera = Camera::new(
-            (20.0, 20.0, 25.0),
-            cgmath::Deg(-90.0 - 30.0),
-            cgmath::Deg(-30.0),
+            (5.0, 2.5, -15.0),
+            cgmath::Deg(90.0),
+            cgmath::Deg(0.0),
         );
+
         let camera_controller = camera::CameraController::new(1.0, 0.1);
 
         let mut info = Graphics {
@@ -61,9 +63,9 @@ impl Graphics {
     }
 
     pub fn resize(&mut self, size: PhysicalSize<u32>) {
-        self.projection.aspect =
-            self.renderer.config.width as f32 / self.renderer.config.height as f32;
         self.renderer.resize(size);
+        let config = &self.renderer.config;
+        self.projection.aspect = config.width as f32 / config.height as f32;
         self.update_camera();
         self.pass.resize(&self.renderer);
     }

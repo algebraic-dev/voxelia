@@ -1,28 +1,10 @@
-use chunk::ChunkRenderSystem;
-use graphics::Graphics;
-use mesh::DynamicMesh;
-use specs::{Join, System, WriteExpect, WriteStorage};
+use structures::{graphics::Graphics, mesh::DynamicMesh};
+use systems::{chunk::ChunkRenderSystem, render::RendererSystem};
 use voxelia_engine::Plugin;
-use voxelia_renderer::pass::Pass;
 
-pub mod chunk;
-pub mod graphics;
-pub mod mesh;
-
-/// Renders all the meshes.
-pub struct RendererSystem;
-
-impl<'a> System<'a> for RendererSystem {
-    type SystemData = (WriteExpect<'a, Graphics>, WriteStorage<'a, DynamicMesh>);
-
-    fn run(&mut self, (mut info, renders): Self::SystemData) {
-        info.update_camera();
-        let meshes = renders.join().map(|x| &x.data).collect::<Vec<_>>();
-        info.pass
-            .draw(&info.renderer, &info.materials, &meshes, &info.globals)
-            .unwrap();
-    }
-}
+pub mod structures;
+pub mod model;
+pub mod systems;
 
 pub struct RendererPlugin {
     pub graphics: Graphics,

@@ -1,9 +1,6 @@
 //! Defines what some things are like [Mesh] and [Material] that are extremely important for rendering
 //! every [Model].
 
-pub mod cube;
-pub mod chunk;
-
 use crate::{instance::ModelInstance, renderer::Renderer, texture, vertex::{ModelIndex, ModelVertex}};
 use wgpu::util::DeviceExt;
 
@@ -103,4 +100,18 @@ impl Mesh {
             material_id,
         }
     }
+}
+
+/// A model here contains all the vertices and indices. Its used in order to update some mesh
+pub struct Model {
+    pub vertices: Vec<ModelVertex>,
+    pub indices: Vec<u16>,
+}
+
+impl Model {
+    pub fn update_mesh(&self, queue: &wgpu::Queue, mesh: &mut Mesh) {
+        queue.write_buffer(&mesh.vertex_buffer, 0, bytemuck::cast_slice(&self.vertices));
+        queue.write_buffer(&mesh.index_buffer, 0, bytemuck::cast_slice(&self.indices));
+        mesh.num_indices = self.indices.len() as u32;
+    } 
 }

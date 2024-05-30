@@ -7,6 +7,22 @@ pub struct ModelInstance {
     pub rotation: cgmath::Quaternion<f32>,
 }
 
+impl ModelInstance {
+    pub fn new(position: cgmath::Vector3<f32>, rotation: cgmath::Quaternion<f32>) -> Self {
+        ModelInstance {
+            position,
+            rotation
+        }
+    }
+
+    pub fn from_position(position: cgmath::Vector3<f32>) -> Self {
+        Self {
+            position,
+            rotation: cgmath::Quaternion::new(0.0, 0.0, 0.0, 0.0),
+        }
+    }
+}
+
 impl From<ModelInstance> for InstanceRaw {
     fn from(value: ModelInstance) -> Self {
         value.to_raw()

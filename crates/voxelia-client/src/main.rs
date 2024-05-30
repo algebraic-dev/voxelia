@@ -1,5 +1,6 @@
 use specs::{Builder, WorldExt};
-use voxelia_client::graphics::Graphics;
+
+use voxelia_client::structures::graphics::Graphics;
 use voxelia_client::RendererPlugin;
 
 use voxelia_engine::{
@@ -16,7 +17,8 @@ use voxelia_renderer::{
 /// Loads all the resources that are needed to run the game
 async fn load(graphics: &mut Graphics) {
     let texture =
-        Texture::from_bytes(&graphics.renderer, include_bytes!("b.jpeg"), "Bulacha").unwrap();
+        Texture::from_bytes(&graphics.renderer, include_bytes!("../../../assets/b.jpeg"), "Bulacha").unwrap();
+
     let material = Material::from_texture(
         &graphics.renderer,
         texture,
@@ -31,13 +33,13 @@ async fn start_engine<'a, 'b>(engine: &mut Engine<'a, 'b>) {
     engine
         .world
         .create_entity()
-        .with(Position([0.0, 0.0, 0.0]))
+        .with(Position::new(0.0, 0.0, 0.0))
         .with(Chunk {
             data: [
-                [[1, 0, 0, 1], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 1]],
-                [[1, 0, 0, 1], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 1]],
-                [[1, 0, 0, 1], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 1]],
-                [[1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1]],
+                1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+                1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+                1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+                1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
             ],
         })
         .with(Created)
@@ -52,6 +54,11 @@ async fn main() {
     let mut graphics = Graphics::new(&window).await;
 
     load(&mut graphics).await;
+
+    window.center_window();
+    window.focus_cursor();
+
+    graphics.resize(window.size());
 
     let mut engine = voxelia_engine::Builder::new()
         .with(BasicPlugin)
