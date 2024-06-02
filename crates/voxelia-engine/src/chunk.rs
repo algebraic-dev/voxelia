@@ -2,7 +2,7 @@
 
 use specs::{Component, VecStorage};
 
-use crate::{Plugin, WorldBuilder};
+use crate::{block::BlockPosition, Plugin, WorldBuilder};
 
 pub const CHUNK_WIDTH: usize = 4;
 pub const CHUNK_HEIGHT: usize = 4;
@@ -22,8 +22,9 @@ pub struct Chunk {
 }
 
 impl Chunk {
-    pub fn get(&self, x: usize, y: usize, z: usize) -> u8 {
-        self.data[z + y * CHUNK_WIDTH + x * CHUNK_WIDTH * CHUNK_HEIGHT]
+    pub fn get(&self, position: &BlockPosition) -> u8 {
+        let index = position.z as usize + position.y as usize * CHUNK_WIDTH + position.x as usize * CHUNK_WIDTH * CHUNK_HEIGHT;
+        self.data[index as usize]
     }
 }
 

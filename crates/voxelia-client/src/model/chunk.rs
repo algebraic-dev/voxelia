@@ -2,8 +2,10 @@
 //! creating chunk models from data and computing their global positions within the game world.
 
 use cgmath::Vector3;
-use voxelia_engine::{chunk::{Chunk, CHUNK_HEIGHT, CHUNK_LENGTH, CHUNK_WIDTH}, Position};
+use voxelia_engine::{block::BlockPosition, chunk::{Chunk, CHUNK_HEIGHT, CHUNK_LENGTH, CHUNK_WIDTH}, Position};
 use voxelia_renderer::{MaterialId, Mesh, Model, ModelInstance, Renderer};
+
+use crate::position::Absolute;
 
 use super::cube;
 
@@ -35,10 +37,17 @@ impl ChunkModel {
         for x in 0..CHUNK_WIDTH {
             for y in 0..CHUNK_HEIGHT {
                 for z in 0..CHUNK_LENGTH {
-                    if chunk.get(x, y, z) == 1 {
-                        let coord = [x as f32 * 2.0, y as f32 * 2.0, z as f32 * 2.0];
-                        indices.extend(cube::INDICES.iter().map(|x| x + vertices.len() as u16));
-                        vertices.extend(cube::VERTICES.iter().map(|v| v.add(coord)));
+                    let coord = BlockPosition::new(x as i64, y as i64, z as i64);
+                    if chunk.get(&coord) == 1 {
+                        for i in 0..6 {
+                            let displacement = &cube::FACE_DISPLACEMENT[i];
+                            let mut neighbor_cube = &coord + displacement;
+                            if neighbor_cube.is_out() || chunk.get(&neighbor_cube) == 0 {
+                                let face_vertices = cube::face(i);
+                                indices.extend(cube::INDICES.iter().map(|x| x + vertices.len() as u16));
+                                vertices.extend(face_vertices.iter().map(|v| v.add(coord.to_slice())));
+                            }
+                        }
                     }
                 }
             }

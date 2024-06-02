@@ -5,6 +5,7 @@ use voxelia_engine::Plugin;
 pub mod structures;
 pub mod model;
 pub mod systems;
+pub mod position;
 
 pub struct RendererPlugin {
     pub graphics: Graphics,

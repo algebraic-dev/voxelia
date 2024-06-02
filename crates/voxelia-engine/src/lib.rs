@@ -4,6 +4,7 @@
 pub mod chunk;
 pub mod core;
 pub mod events;
+pub mod block;
 
 pub use core::*;
 
