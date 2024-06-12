@@ -5,6 +5,7 @@ pub mod chunk;
 pub mod core;
 pub mod events;
 pub mod block;
+pub mod collision;
 
 pub use core::*;
 

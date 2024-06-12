@@ -7,4 +7,5 @@ edition = "2021"
 
 [dependencies]
 specs = { version = "0.20.0", features = ["specs-derive"] }
+cgmath = "0.18.0"
 

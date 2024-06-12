@@ -1785,6 +1785,7 @@ dependencies = [
 name = "voxelia-engine"
 version = "0.1.0"
 dependencies = [
+ "cgmath",
  "specs 0.20.0",
 ]
 

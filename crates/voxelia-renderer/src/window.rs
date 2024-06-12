@@ -74,7 +74,7 @@ impl Window {
     }
 
     pub fn focus_cursor(&self) {
-        self.window.set_cursor_grab(window::CursorGrabMode::Locked).unwrap();
+        self.window.set_cursor_grab(window::CursorGrabMode::Locked);
         self.window.set_cursor_visible(false);
     }
     
